@@ -6,7 +6,7 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 // Rota para a página inicial
-app.get('/', (req, res) => res.sendFile(__dirname + 'public/index.html'));
+app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
 // Evento para quando o cliente se conecta ao servidor via Socket.io
 io.on('connection', (socket) => {
