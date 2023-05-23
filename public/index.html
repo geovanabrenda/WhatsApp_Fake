@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="img/logo.png">
+    <title>WhatApp Web</title>
+</head>
+
+<body>
+    <header>
+        <img src="img/pessoa-removebg-preview.png" id="logo">
+        <img src="img/pesquisa.png" id="config">
+    </header>
+    <form>
+    <main>
+        <div id="maioral">
+            <div id="box-esquerda">
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/witorinha-removebg-preview.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Witoria Dayanna</p>
+                            <p>oii ge, tudo bem?...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/joao-removebg-preview.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">João Marcelo</p>
+                            <p>Tem que ver se o silas...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/chosen-removebg-preview.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">CHOSEN EXTREME</p>
+                            <p>Falaa galera, passando pra avisar...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/prima-removebg-preview.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Ana Lara</p>
+                            <p>Oii prima, tudo bem?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/mamae-removebg-preview.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Gle Gle</p>
+                            <p>Não esquece de recarregar...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/dudoca-removebg-preview.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Dudis </p>
+                            <p>Mano, o trabalho da cátia pra hoje...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/bruno-removebg-preview.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Professor Bruno</p>
+                            <p>Boa tarde, hoje encerra as atividades...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/user111.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Alisson senai</p>
+                            <p>Bom dia, você enviou a atividade do Ismael?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/user111.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Gregório</p>
+                            <p>KKKKKKKKKKKKKKKKKKKKKKKKKKKKK</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caixa">
+                    <div class="itens">
+                        <img src="img/user111.png" id="user">
+                        <div class="inf">
+                            <p class="usuario">Juliana </p>
+                            <p>Oii, conseguiu arrumar o seu github? </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="box-direita">
+                <div id="detalhes">
+                    <img id="user2" src="img/pessoa-removebg-preview.png" alt="">
+                    <input type="text" id="nome" placeholder="Seu nome de usuário">
+                </div>
+                <ul id="mensagens"></ul>
+             
+                    <div id="caixa-enviar">
+                        <input type="text" id="mensagem" placeholder="Escreva sua mensagem...">
+                        <button id="btn-enviar">
+                            <img id="icon-enviar" src="img/icon.png" alt="">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Importar o script do Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        //Cria uma instancia do Socket.IO
+        const socket = io();
+
+        //Seleciona o input do nome do usuário
+        const nomeInput = document.getElementById('nome');
+        //Seleciona o input da mensagem
+        const mensagemInput = document.getElementById('mensagem');
+        //Seleciona a lista de mensagens
+        const mensagens = document.getElementById('mensagens');
+
+        //Adiciona um evento para o envio do formulário
+        document.querySelector('form').addEventListener('submit', evento => {
+            //Previne o envio padrão do formulario para não atualizar a página
+            evento.preventDefault();
+            //Obtém o valor do input do nome do usuário
+            const nome = nomeInput.value;
+            //Obtém o valor do input da mensagem
+            const mensagem = mensagemInput.value;
+
+            //Função para botão com ENTER do teclado
+            const searchBtn = document.querySelector("#btn-enviar");
+            mensagens.addEventListener("keyup", (e) => {
+
+                if(e.code === "Enter"){
+                    const enviar = e.target.value;
+                    mensagem(enviar);
+                }
+            });
+
+
+            //Método JAVASCRIpt que verifica os valores válidos(Não esta em branco os campos)
+            //EMIT envia um evento chamado 'chat message' com o oebjeto contendo os valores de nome e mensagem para o servidor
+            //TRIM é um método 
+            nome.trim() && mensagem.trim() && socket.emit('chat message', { nome, mensagem });
+
+            //Limpa o input da mensagem
+            mensagemInput.value = '';
+            //Desabilita o input do nome do usuário após a primeira mensagem
+            nomeInput.disabled = true;
+        })
+        //Adiciona um evento de mensagem recebido pelo servidor
+        socket.on('chat message', dados => {
+            //Cria um elemento de lista para exibir a mensagem
+            const lista = document.createElement('li');
+            //Define o texto da mensagem
+            lista.textContent = `${dados.nome}: ${dados.mensagem}`;
+            //Adiciona o elemento de lista de mensagens
+            mensagens.appendChild(lista);
+        })
+    </script>
+</body>
+
+</html>
