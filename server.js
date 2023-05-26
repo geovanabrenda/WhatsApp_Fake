@@ -5,6 +5,11 @@ const http = require('http').createServer(app);
 // Importando o módulo 'socket.io' e passando o servidor 'http' como parâmetro, atribuindo-o à constante 'io'
 const io = require('socket.io')(http);
 
+//Importando o public
+
+  const express = require ('express');
+  app.use(express.static('public'));
+
 // Rota para a página inicial
 app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
